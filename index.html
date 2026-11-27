@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173d36">
+<meta name="description" content="Reza el Santo Rosario con misterios del día, meditaciones y guía paso a paso. Funciona sin conexión.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Santo Rosario">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>El Santo Rosario · Reza con el corazón</title>
+<style>
+:root{--green:#173d36;--green2:#285548;--gold:#c69b4a;--paper:#fbfaf6;--ink:#17231f;--muted:#52635d;--line:#d8dfd9;--panel:#fff;--soft:#edf2ed;--focus:#a45b00}
+*{box-sizing:border-box}html{font-size:18px}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55}
+button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.skip{position:absolute;left:-9999px;top:8px;background:#fff;padding:12px;z-index:10}.skip:focus{left:8px}
+header{background:var(--green);color:white;padding:28px 18px 24px}.wrap{max-width:850px;margin:auto;padding:0 16px}
+.brand{font-size:.78rem;letter-spacing:.13em;font-weight:750;color:#eadbb8}.hero h1{font-size:clamp(2rem,7vw,3rem);line-height:1.08;margin:.45rem 0}.hero p{margin:.5rem 0;color:#f1eee5}.date{font-size:.9rem;color:#e5e9e4}
+main{padding:22px 0 56px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;margin:0 0 18px;box-shadow:0 2px 8px #12251a0a}
+h2{font-size:1.25rem;margin:0 0 8px}h3{font-size:1.06rem;margin:0}p{margin:.45rem 0}.muted{color:var(--muted);font-size:.9rem}
+.pill{display:inline-block;border-radius:999px;background:var(--soft);padding:4px 11px;font-size:.78rem;font-weight:700;color:var(--green2)}
+label{display:block;font-weight:650;margin:12px 0 6px}textarea,input{width:100%;border:1px solid #87978f;border-radius:10px;padding:12px;background:white;color:var(--ink)}
+button{border:1px solid var(--green2);border-radius:12px;padding:12px 16px;background:var(--green2);color:white;font-weight:700;min-height:48px}
+button.secondary{background:white;color:var(--green2)}button:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.row>*{flex:1}
+.mystery{width:100%;text-align:left;background:white;color:var(--ink);border:1px solid var(--line);padding:14px;margin:7px 0;min-height:unset}
+.mystery[aria-expanded=true]{border:2px solid var(--green2);background:var(--soft)}
+.mystery small{display:block;color:var(--muted);font-weight:500;margin-top:3px}
+.reading{padding:12px 4px 2px;font-weight:400}
+.progress{height:10px;background:#e5eae5;border-radius:20px;overflow:hidden;margin:12px 0}.bar{height:100%;width:0;background:var(--green2);transition:width .2s}
+.prayerbox{background:#f5f6f1;border-radius:14px;padding:18px;margin:14px 0;font-size:1.08rem}
+.center{text-align:center}.beads{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:15px 0}.bead{width:17px;height:17px;border-radius:50%;background:#dce3dd;border:1px solid #9aa99f}.bead.done{background:var(--green2);border-color:var(--green2)}.bead.current{background:var(--gold);border:2px solid #795719}
+.timer{font-size:2rem;font-weight:750;font-variant-numeric:tabular-nums;text-align:center;margin:8px}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.controls button{width:100%}
+.settings{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.settings button{min-height:42px}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:10px 0 30px}
+.large{font-size:21px}.large .prayerbox{font-size:1.28rem}
+@media(min-width:650px){header{padding:38px 18px}.panel{padding:24px}.hero p{max-width:650px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido principal</a>
+<header><div class="wrap hero">
+<div class="brand">✧ ORACIÓN · CONTEMPLACIÓN · FE</div>
+<h1>El Santo Rosario</h1>
+<p>Reza con el corazón. Un momento para detenerte, contemplar y encontrarte con Dios.</p>
+<div class="date" id="todayDate"></div>
+</div></header>
+<main id="contenido" class="wrap">
+<section class="panel" aria-labelledby="todayHeading">
+<div class="row"><div><span class="pill">MISTERIOS DE HOY</span><h2 id="todayHeading" style="margin-top:8px">Misterios</h2></div><div class="muted" id="dayName"></div></div>
+<p class="muted">El día de la semana determina automáticamente los misterios. También puedes consultar cualquiera de los cinco misterios.</p>
+<div id="mysteryList"></div>
+</section>
+<section class="panel" aria-labelledby="intentionHeading">
+<h2 id="intentionHeading">Preparar mi oración</h2>
+<p class="muted">Ofrece este Rosario por tus intenciones. Este texto permanece solo en esta sesión.</p>
+<label for="intention">Mi intención de hoy</label>
+<textarea id="intention" rows="2" placeholder="Por quién o por qué quiero rezar…"></textarea>
+<div class="settings" style="margin-top:12px">
+<button class="secondary" id="fontToggle" type="button" aria-pressed="false">Aumentar tamaño de letra</button>
+<button class="secondary" id="contrastToggle" type="button" aria-pressed="false">Contraste alto</button>
+</div>
+</section>
+<section class="panel" aria-labelledby="prayHeading">
+<div class="row"><div><span class="pill">GUÍA PASO A PASO</span><h2 id="prayHeading" style="margin-top:8px">Tu momento de oración</h2></div><span class="pill" id="status">Preparación</span></div>
+<div class="progress" role="progressbar" aria-label="Progreso del Rosario" aria-valuemin="0" aria-valuemax="65" aria-valuenow="0" id="progress"><div class="bar" id="bar"></div></div>
+<div class="muted" id="progressText">Preparación · 0 de 65 pasos</div>
+<div class="center" style="margin-top:18px">
+<h3 id="stepTitle">Comienza poniéndote en presencia de Dios</h3>
+<p class="muted" id="stepSubtitle">Haz silencio y presenta tus intenciones.</p>
+</div>
+<div class="prayerbox" id="prayerText" aria-live="polite">Comienza poniéndote en presencia de Dios. Ofrece este Rosario por tus intenciones y disponte a contemplar la vida de Jesús con María.</div>
+<div id="beadArea" hidden>
+<div class="beads" id="beads" aria-label="Diez cuentas del Avemaría"></div>
+<div class="center muted" id="beadCount"></div>
+</div>
+<div id="timerArea" class="panel center" style="background:#f5f6f1" hidden>
+<strong>Silencio y contemplación</strong><div class="timer" id="timer">00:15</div>
+<p class="muted">Puedes dejar que el silencio continúe o avanzar cuando estés preparado.</p>
+<div class="row"><button class="secondary" id="timerStart" type="button">Iniciar 15 segundos</button><button class="secondary" id="timerStop" type="button">Detener</button></div>
+</div>
+<div class="controls" style="margin-top:16px">
+<button class="secondary" id="previous" type="button" disabled>← Anterior</button>
+<button id="next" type="button">Comenzar</button>
+</div>
+<div class="row" style="margin-top:10px">
+<button class="secondary" id="pause" type="button" hidden>Pausar oración</button>
+<button class="secondary" id="restart" type="button">Reiniciar Rosario</button>
+</div>
+<div id="complete" hidden class="center" style="margin-top:16px">
+<h3>Has terminado los cinco misterios.</h3><p>Gracias por dedicar este tiempo a la oración.</p>
+</div>
+</section>
+<section class="panel">
+<h2>Orden tradicional del Rosario</h2>
+<ol>
+<li>Señal de la cruz y ofrecimiento del Rosario.</li>
+<li>Credo, Padrenuestro, tres Avemarías y Gloria.</li>
+<li>Anuncio y contemplación del primer misterio.</li>
+<li>Padrenuestro, diez Avemarías y Gloria.</li>
+<li>Se repite con los otros cuatro misterios.</li>
+<li>Salve y oración final.</li>
+</ol>
+<p class="muted">La guía incluye las oraciones principales y las cinco decenas. Puedes avanzar o retroceder libremente; no hay límite de tiempo para rezar.</p>
+</section>
+<footer>Una herramienta sencilla para acompañar tu oración. Consulta las lecturas completas en tu Biblia.</footer>
+</main>
+<script>
+const sets={
+Gozosos:{days:[1,6],items:[
+["La Anunciación del ángel a María","Lucas 1,26-38","El ángel Gabriel anuncia a María que será la madre de Jesús. María escucha, confía y responde con disponibilidad a Dios."],
+["La Visitación de María a Isabel","Lucas 1,39-45","María visita a Isabel. Ambas reconocen la acción de Dios y comparten la alegría de la fe."],
+["El nacimiento de Jesús en Belén","Lucas 2,1-20","Jesús nace en la humildad de un pesebre. Dios se hace cercano y pequeño para encontrarse con nosotros."],
+["La presentación de Jesús en el templo","Lucas 2,22-35","María y José presentan a Jesús en el templo. Simeón reconoce en aquel niño la salvación prometida."],
+["El niño Jesús perdido y hallado en el templo","Lucas 2,41-52","Jesús es encontrado entre los maestros. María y José descubren que su misión está vinculada a la voluntad del Padre."]]},
+Luminosos:{days:[4],items:[
+["El Bautismo de Jesús en el Jordán","Mateo 3,13-17","Jesús es bautizado y el Padre lo proclama su Hijo amado. El Espíritu Santo desciende sobre Él."],
+["Las bodas de Caná","Juan 2,1-11","María advierte la necesidad de los novios y dice: haced lo que Él os diga. Jesús realiza su primer signo."],
+["El anuncio del Reino de Dios","Marcos 1,14-15","Jesús anuncia la llegada del Reino e invita a convertirse y creer en el Evangelio."],
+["La Transfiguración","Lucas 9,28-36","Jesús manifiesta su gloria ante Pedro, Santiago y Juan. La voz del Padre invita a escucharle."],
+["La institución de la Eucaristía","Lucas 22,14-20","Jesús entrega su cuerpo y su sangre y deja a sus discípulos el memorial de su amor."]]},
+Dolorosos:{days:[2,5],items:[
+["La oración de Jesús en el huerto","Mateo 26,36-46","Jesús vive la angustia en Getsemaní y acepta la voluntad del Padre. Nos enseña a confiar en los momentos difíciles."],
+["La flagelación del Señor","Juan 19,1","Jesús es azotado. Contemplamos su sufrimiento y el amor con el que entrega su vida."],
+["La coronación de espinas","Mateo 27,27-31","Jesús es humillado y coronado de espinas. Su realeza no se basa en el poder, sino en el amor."],
+["Jesús carga con la cruz","Juan 19,16-17","Jesús lleva la cruz hasta el Calvario. Contemplamos su entrega y aprendemos a acompañar a quienes sufren."],
+["La crucifixión y muerte de Jesús","Lucas 23,33-46","Jesús entrega su vida en la cruz y perdona. Su amor llega hasta el extremo."]]},
+Gloriosos:{days:[0,3],items:[
+["La Resurrección de Jesús","Mateo 28,1-10","El sepulcro está vacío. Jesús ha resucitado y la muerte no tiene la última palabra."],
+["La Ascensión del Señor","Hechos 1,6-11","Jesús asciende al cielo y confía a sus discípulos la misión de anunciar el Evangelio."],
+["La venida del Espíritu Santo","Hechos 2,1-13","El Espíritu Santo desciende sobre los discípulos y los llena de fuerza para anunciar la Buena Noticia."],
+["La Asunción de María","Apocalipsis 12,1","María participa plenamente de la gloria de Dios. Contemplamos en ella la esperanza de nuestra propia resurrección."],
+["La coronación de María","Apocalipsis 12,1","María es contemplada como reina y madre. Su vida nos señala el camino hacia la plenitud junto a Dios."]]}}
+const dayNames=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+const today=new Date(),day=today.getDay();
+const setName=Object.keys(sets).find(k=>sets[k].days.includes(day))||"Gozosos";
+const set=sets[setName];
+document.getElementById("todayDate").textContent=today.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+document.getElementById("dayName").textContent=dayNames[day].toUpperCase();
+document.getElementById("todayHeading").textContent="Misterios "+setName.toLowerCase();
+let selected=0,step=-1,timerInterval=null,remaining=15,paused=false;
+const $=id=>document.getElementById(id);
+function renderMysteries(){
+ $("mysteryList").innerHTML="";
+ set.items.forEach((m,i)=>{
+  const b=document.createElement("button");b.className="mystery";b.type="button";b.setAttribute("aria-expanded",String(selected===i));
+  b.innerHTML=`<strong>${i+1}. ${m[0]}</strong><small>${m[1]}</small>`;
+  if(selected===i){const d=document.createElement("div");d.className="reading";d.innerHTML=`<strong>Lectura y meditación</strong><p>${m[2]}</p><p class="muted">Lee el pasaje completo en tu Biblia y dedica un momento a contemplar la escena.</p>`;b.appendChild(d)}
+  b.addEventListener("click",()=>{selected=i;renderMysteries()});$("mysteryList").appendChild(b);
+ });
+}
+renderMysteries();
+const prayers={
+start:"Comienza poniéndote en presencia de Dios. Ofrece este Rosario por tus intenciones y disponte a contemplar la vida de Jesús con María.",
+creed:"Creo en Dios, Padre todopoderoso, creador del cielo y de la tierra. Creo en Jesucristo, su único Hijo, nuestro Señor, que fue concebido por obra y gracia del Espíritu Santo, nació de santa María Virgen, padeció bajo el poder de Poncio Pilato, fue crucificado, muerto y sepultado, descendió a los infiernos, al tercer día resucitó de entre los muertos, subió a los cielos y está sentado a la derecha de Dios, Padre todopoderoso. Desde allí ha de venir a juzgar a vivos y muertos. Creo en el Espíritu Santo, la santa Iglesia católica, la comunión de los santos, el perdón de los pecados, la resurrección de la carne y la vida eterna. Amén.",
+our:"Padre nuestro, que estás en el cielo, santificado sea tu nombre; venga a nosotros tu reino; hágase tu voluntad en la tierra como en el cielo. Danos hoy nuestro pan de cada día; perdona nuestras ofensas, como también nosotros perdonamos a los que nos ofenden; no nos dejes caer en la tentación y líbranos del mal. Amén.",
+hail:"Dios te salve, María, llena eres de gracia, el Señor es contigo. Bendita tú eres entre todas las mujeres, y bendito es el fruto de tu vientre, Jesús. Santa María, Madre de Dios, ruega por nosotros, pecadores, ahora y en la hora de nuestra muerte. Amén.",
+glory:"Gloria al Padre, y al Hijo, y al Espíritu Santo. Como era en el principio, ahora y siempre, por los siglos de los siglos. Amén.",
+salve:"Dios te salve, Reina y Madre de misericordia, vida, dulzura y esperanza nuestra, Dios te salve. A ti llamamos los desterrados hijos de Eva; a ti suspiramos, gimiendo y llorando en este valle de lágrimas. Ea, pues, Señora, abogada nuestra, vuelve a nosotros esos tus ojos misericordiosos; y después de este destierro muéstranos a Jesús, fruto bendito de tu vientre. ¡Oh clementísima, oh piadosa, oh dulce Virgen María! Ruega por nosotros, Santa Madre de Dios, para que seamos dignos de alcanzar las promesas de nuestro Señor Jesucristo. Amén."
+};
+const steps=[];
+steps.push({title:"Señal de la cruz y ofrecimiento",subtitle:"Prepara el corazón",text:"Por la señal de la Santa Cruz, de nuestros enemigos líbranos, Señor, Dios nuestro. En el nombre del Padre, y del Hijo, y del Espíritu Santo. Amén.\n\nOfrece este Rosario por tus intenciones."});
+steps.push({title:"Credo",subtitle:"Profesión de fe",text:prayers.creed});
+steps.push({title:"Padrenuestro",subtitle:"Primera oración",text:prayers.our});
+for(let i=0;i<3;i++)steps.push({title:`Avemaría ${i+1} de 3`,subtitle:"Por el aumento de la fe, la esperanza y la caridad",text:prayers.hail});
+steps.push({title:"Gloria",subtitle:"Alabanza a la Trinidad",text:prayers.glory});
+for(let d=0;d<5;d++){
+ steps.push({kind:"mystery",d,title:`Misterio ${d+1}: ${set.items[d][0]}`,subtitle:set.items[d][1],text:set.items[d][2]});
+ steps.push({title:"Padrenuestro",subtitle:"Anuncia el misterio y reza",text:prayers.our});
+ for(let a=1;a<=10;a++)steps.push({title:`Avemaría ${a} de 10`,subtitle:`Misterio ${d+1} de 5`,text:prayers.hail,bead:a});
+ steps.push({title:"Gloria",subtitle:"Alabanza a la Trinidad",text:prayers.glory});
+}
+steps.push({title:"Salve",subtitle:"Oración a María",text:prayers.salve});
+steps.push({title:"Señal de la cruz",subtitle:"Oración concluida",text:"En el nombre del Padre, y del Hijo, y del Espíritu Santo. Amén."});
+function render(){
+ const done=step>=steps.length,initial=step<0,s=steps[step]||null;
+ $("status").textContent=done?"Completado":initial?"Preparación":`Paso ${step+1} de ${steps.length}`;
+ $("progress").setAttribute("aria-valuemax",steps.length);$("progress").setAttribute("aria-valuenow",Math.max(0,step+1));
+ $("bar").style.width=(Math.max(0,step+1)/steps.length*100)+"%";
+ $("progressText").textContent=`${Math.max(0,step+1)} de ${steps.length} pasos`;
+ $("stepTitle").textContent=done?"Rosario terminado":initial?"Comienza poniéndote en presencia de Dios":s.title;
+ $("stepSubtitle").textContent=done?"Gracias por este tiempo de oración.":initial?"Haz silencio y presenta tus intenciones.":s.subtitle;
+ $("prayerText").textContent=done?"Has terminado los cinco misterios. Que este tiempo de oración te acompañe durante el día.":initial?prayers.start:s.text;
+ $("previous").disabled=initial;$("next").textContent=done?"Volver al inicio":initial?"Comenzar":"Siguiente";
+ $("complete").hidden=!done;$("pause").hidden=initial||done;
+ $("beadArea").hidden=!(s&&s.bead);$("timerArea").hidden=!(s&&s.kind==="mystery");
+ if(s&&s.bead){$("beads").innerHTML="";for(let i=1;i<=10;i++){let b=document.createElement("span");b.className="bead "+(i<s.bead?"done":i===s.bead?"current":"");b.setAttribute("aria-label",`Cuenta ${i}${i===s.bead?", actual":i<s.bead?", completada":""}`);$("beads").appendChild(b)}$("beadCount").textContent=`Cuenta ${s.bead} de 10 · Avemaría`}
+ if(!(s&&s.kind==="mystery"))stopTimer();
+}
+function stopTimer(){if(timerInterval)clearInterval(timerInterval);timerInterval=null}
+function updateTimer(){$("timer").textContent=`00:${String(remaining).padStart(2,"0")}`}
+$("timerStart").addEventListener("click",()=>{stopTimer();remaining=15;updateTimer();timerInterval=setInterval(()=>{remaining--;updateTimer();if(remaining<=0){stopTimer();$("timerStart").textContent="Repetir 15 segundos";if("vibrate" in navigator)navigator.vibrate(150)}},1000);$("timerStart").textContent="Contando…"});
+$("timerStop").addEventListener("click",()=>{stopTimer();remaining=15;updateTimer();$("timerStart").textContent="Iniciar 15 segundos"});
+$("next").addEventListener("click",()=>{if(step>=steps.length-1)step=-1;else step++;paused=false;$("pause").textContent="Pausar oración";render();});
+$("previous").addEventListener("click",()=>{step=Math.max(-1,step-1);render()});
+$("restart").addEventListener("click",()=>{step=-1;paused=false;stopTimer();remaining=15;updateTimer();$("pause").textContent="Pausar oración";render()});
+$("pause").addEventListener("click",()=>{paused=!paused;$("pause").textContent=paused?"Continuar oración":"Pausar oración";if(paused){stopTimer();$("stepSubtitle").textContent="Pausa. Tómate el tiempo que necesites."}else render()});
+$("fontToggle").addEventListener("click",e=>{document.body.classList.toggle("large");e.currentTarget.setAttribute("aria-pressed",document.body.classList.contains("large"));e.currentTarget.textContent=document.body.classList.contains("large")?"Tamaño normal":"Aumentar tamaño de letra"});
+$("contrastToggle").addEventListener("click",e=>{const on=document.body.classList.toggle("contrast");e.currentTarget.setAttribute("aria-pressed",on);if(on){document.documentElement.style.setProperty("--paper","#fff");document.documentElement.style.setProperty("--ink","#000");document.documentElement.style.setProperty("--muted","#222");document.documentElement.style.setProperty("--line","#555")}else{document.documentElement.style.setProperty("--paper","#fbfaf6");document.documentElement.style.setProperty("--ink","#17231f");document.documentElement.style.setProperty("--muted","#52635d");document.documentElement.style.setProperty("--line","#d8dfd9")}});
+updateTimer();render();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(err => console.error('No se pudo registrar el modo sin conexión:', err));
+  });
+}
+</script>
+</body></html>
